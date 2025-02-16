@@ -1,0 +1,13 @@
+
+*.o
+*.so
+*.db
+*.json
+*.log
+simv*
+csrc/
+daidir/
+work/
+ucli.key
+*.a
+
