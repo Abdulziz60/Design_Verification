@@ -1,33 +1,36 @@
-// `include "/home/Abdulaziz_Salem/CX-301-DesignVerification/Labs/LTestBench/Task1/TB/trans.sv"
+// Driver class responsible for receiving transactions and applying them to the DUT
 class Driver;
 
-        trans T; 
-        mailbox #(trans) mbx ;
-        virtual adder_if aif;
+    // Transaction object to hold received data
+    trans T;  
 
-        function  new (virtual adder_if aif, mailbox #(trans) mbx ) ;
-                    //mbx1
-            this.mbx = mbx;
-            this.aif = aif;
-            T = new();
-        endfunction
+    // Mailbox to receive transactions from Generator
+    mailbox #(trans) mbx;  
 
-        //gnerate signals and apply them to DUT usinf interface
+    // Virtual interface to connect with DUT
+    virtual adder_if aif;  
 
-        task run ();
-            forever
-            begin  
-                     mbx.get(T); //getting the transaction from the mailbox 
+    // Constructor: Initializes mailbox and interface, creates a new transaction object
+    function new(virtual adder_if aif, mailbox #(trans) mbx);
+        this.mbx = mbx;  // Store the mailbox handle
+        this.aif = aif;  // Store the interface handle
+        T = new();       // Create a new transaction object
+    endfunction
 
-                     $display("Driver : ");
-                     T.display();
+    // Task to receive transactions and apply them to the DUT
+    task run();
+        forever begin  
+            mbx.get(T);  // Retrieve transaction from mailbox
 
-                    aif.a = T.a;
-                    aif.b = T.b;
-                    #1;
-                
-            end
+            // Display the transaction details
+            $display("Driver :");
+            T.display();
 
-        endtask
+            // Apply input values to the DUT through the interface
+            aif.a = T.a;
+            aif.b = T.b;
+            #5;  // Small delay for simulation stability
+        end
+    endtask
 
-endclass //Driver
+endclass // Driver
