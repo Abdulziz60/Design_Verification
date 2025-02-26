@@ -1,0 +1,9 @@
+{"vcs1":{"timestamp_begin":1740571975.003528069, "rt":0.24, "ut":0.09, "st":0.11}}
+{"vcselab":{"timestamp_begin":1740571975.329659618, "rt":0.19, "ut":0.12, "st":0.05}}
+{"link":{"timestamp_begin":1740571975.574886786, "rt":0.20, "ut":0.10, "st":0.12}}
+{"SNPS_VCS_INTERNAL_ROOT_START_TIME": 1740571974.746085124}
+{"VCS_COMP_START_TIME": 1740571974.746085124}
+{"VCS_COMP_END_TIME": 1740571975.847669625}
+{"VCS_USER_OPTIONS": "-full64 -sverilog ../task1/piso.sv ../task1/TB_piso.sv ../task1/top.sv -o PISO_out"}
+{"vcs1": {"peak_mem": 307588}}
+{"vcselab": {"peak_mem": 158216}}
