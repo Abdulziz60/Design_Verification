@@ -2,7 +2,6 @@ timeunit 1ns;
 timeprecision 1ns;
 
 module and_ff_test (
-
     input  logic clk, 
     output logic rst_n, 
     output logic enable, 
@@ -11,67 +10,56 @@ module and_ff_test (
     input  logic z
 );
 
-initial clk = 0; 
-always #5 clk = ~clk;
+// Clock Generation
+// initial clk = 0; 
+// always #5 clk = ~clk;
     
-always_ff @(posedge clk ) begin 
-    $display("start tast");
+task check_output(logic expected);
+    if (z !== expected) begin
+        $display("TEST FAILED: a=%d, b=%d, enable=%d, rst_n=%d, z=%d, expected=%d", 
+            a, b, enable, rst_n, z, expected);
+        $finish;
+    end 
+endtask
 
-    initial begin
+initial begin
+
+  rst_n = 1;
+  #1;
+  rst_n = 0;
+  #2;
+  rst_n = 1;
+  #2;
   
-    //   repeat (10 ) begin 
-    //   a = $urandom_range(0,1);
-    //   b = $urandom_range(0,1);
-    //   enable = $urandom_range(0,1);
-    //   rst_n = $urandom_range(0,1);
+end
 
-    //   @(posedge clk);
-      check_output();
-    end
-    $display("TEST PASSED");
-    $finish;
-    end
-
-    initial begin
-   
-    always_ff @(negedge clk)
-    a = 0; b = 0; rst_n = 0; enable = 0; 
-    @(negedge clk) expect_test( z <= 0 );
+initial begin
+    a = 0; b = 0; rst_n = 0; enable = 0;
+    @(negedge clk); check_output(0);  
 
     a = 0; b = 0; rst_n = 1; enable = 1; 
-    @(negedge clk) expect_test( z <= z );
-    
-    a = 1; b = 0; rst_n = 1; enable = 1; 
-    @(negedge clk) expect_test( z <= 0 );
-    
-    a = 0; b = 1; rst_n = 1; enable = 1; 
-    @(negedge clk) expect_test( z <= 0 );
-    
-    a = 1; b = 1; rst_n = 1; enable = 1; 
-    @(negedge clk) expect_test( z <= 1 );
-    
-    a = 1; b = 1; rst_n = 1; enable = 0; 
-    @(negedge clk) expect_test( z <= z );
-    
+    @(negedge clk); check_output(z); // Output should remain unchanged
+
+    a = 1; b = 0; rst_n = 1; enable = 1;
+    @(negedge clk); check_output(0);
+
+    a = 0; b = 1; rst_n = 1; enable = 1;
+    @(negedge clk); check_output(0);
+
+    a = 1; b = 1; rst_n = 1; enable = 1;
+    @(negedge clk); check_output(1);
+
+    a = 1; b = 1; rst_n = 1; enable = 0;
+    @(negedge clk); check_output(z); // Should remain unchanged
+
     a = 1; b = 1; rst_n = 0; enable = 1;
-    @(negedge clk) expect_test( z <= 0 );
-    
-    a = 1; b = 1; rst_n = 0; enable = 0; 
-    @(negedge clk) expect_test( z <= z );
+    @(negedge clk); check_output(0);
+
+    a = 1; b = 1; rst_n = 0; enable = 0;
+    @(negedge clk); check_output(z); // Should remain unchanged
 
     $display("TEST PASSED");
     $finish;
-  end
-
-    task check_output();
-    logic expect_test;
-    
-    if (z !== expect_test ) begin
-        $display("TEST FAILED: a=%d, b=%d, out=%d, expected=%d", 
-            a, b, opcode, z, expect_test);
-            $finish;
-    end
-  endtask
-
+end
 
 endmodule
