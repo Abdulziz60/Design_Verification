@@ -30,7 +30,7 @@ initial begin
   #2;
   rst_n = 1;
   #2;
-  
+
 end
 
 initial begin
@@ -61,5 +61,7 @@ initial begin
     $display("TEST PASSED");
     $finish;
 end
+
+
 
 endmodule
