@@ -1,13 +1,19 @@
 timeunit 1ns;
 timeprecision 1ns;
 
-
 `include "../Task1/and_ff.sv"
 `include "../Task1/TB.sv"
 
 module top;
+
     logic clk;
+    logic rst_n;
+    logic enable;
+    logic a,b;
+    logic z;
+
     
+
 
 // Clock Generation
 initial clk = 0;

@@ -19,49 +19,53 @@ task check_output(logic expected);
         $display("TEST FAILED: a=%d, b=%d, enable=%d, rst_n=%d, z=%d, expected=%d", 
             a, b, enable, rst_n, z, expected);
         $finish;
-    end 
+
+    end
+    else 
+    $display("time = %0d, test passed",$time);
+    
 endtask
 
 initial begin
 
+  rst_n = 0;
+  #1;
   rst_n = 1;
+  #2;
+  rst_n = 0;
   #1;
   rst_n = 0;
-  #2;
-  rst_n = 1;
-  #2;
-
 end
 
 initial begin
-    a = 0; b = 0; rst_n = 0; enable = 0;
-    @(negedge clk); check_output(0);  
+  
+  @(negedge clk);
+    a = 1; b = 1; rst_n = 0; enable = 1;
+  @(posedge clk);
+    $display("z = %d",z);
+    @(negedge clk); check_output(1);  
 
-    a = 0; b = 0; rst_n = 1; enable = 1; 
-    @(negedge clk); check_output(z); // Output should remain unchanged
+    a = 0; b = 0; rst_n = 0; enable = 1; 
+    @(negedge clk); check_output(0); 
 
-    a = 1; b = 0; rst_n = 1; enable = 1;
+    a = 1; b = 0; rst_n = 0; enable = 1;
     @(negedge clk); check_output(0);
 
-    a = 0; b = 1; rst_n = 1; enable = 1;
+    a = 0; b = 1; rst_n = 0; enable = 1;
     @(negedge clk); check_output(0);
 
-    a = 1; b = 1; rst_n = 1; enable = 1;
+    a = 1; b = 1; rst_n = 0; enable = 1;
     @(negedge clk); check_output(1);
 
     a = 1; b = 1; rst_n = 1; enable = 0;
-    @(negedge clk); check_output(z); // Should remain unchanged
-
-    a = 1; b = 1; rst_n = 0; enable = 1;
-    @(negedge clk); check_output(0);
-
-    a = 1; b = 1; rst_n = 0; enable = 0;
-    @(negedge clk); check_output(z); // Should remain unchanged
+    @(negedge clk); check_output(0); 
 
     $display("TEST PASSED");
     $finish;
 end
 
-
+initial begin
+    $monitor("time = %0d, clk = %0d ,a = %0d, b = %0d, res_n = %0d, enabel = %0d, output = %0d",$time,clk, a, b, rst_n, enable ,z);
+end
 
 endmodule
