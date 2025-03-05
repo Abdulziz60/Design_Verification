@@ -15,7 +15,7 @@ module bit_serial_adder (
   reg [3:0] sum_reg;
   reg       carry;
   reg [2:0] bit_count;
-
+ logic sum_bit,carry_out;
   localparam IDLE   = 2'b00,
              ADDING = 2'b01,
              DONE   = 2'b10;
@@ -50,8 +50,8 @@ module bit_serial_adder (
         end
 
         ADDING: begin
-          wire sum_bit   = A_reg[0] ^ B_reg[0] ^ carry;
-          wire carry_out = (A_reg[0] & B_reg[0]) | (carry & (A_reg[0] ^ B_reg[0]));
+          sum_bit   = A_reg[0] ^ B_reg[0] ^ carry;
+          carry_out = (A_reg[0] & B_reg[0]) | (carry & (A_reg[0] ^ B_reg[0]));
           sum_reg        <= {sum_bit, sum_reg[3:1]};
           A_reg          <= A_reg >> 1;
           B_reg          <= B_reg >> 1;
