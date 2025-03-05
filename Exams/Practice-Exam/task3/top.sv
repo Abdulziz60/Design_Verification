@@ -44,7 +44,10 @@ TB_bit_serial_adder DUT_TB_bit_serial_adder(
 
 initial begin
 #5000;
-$display("Done whit test, out of the time!!!");
+$display("-------------------------------------------------------------------------");
+$display("------------------Done whit test, out of the time!!!---------------------");
+$display("-------------------------------------------------------------------------");
+
 $finish;
 end
 
