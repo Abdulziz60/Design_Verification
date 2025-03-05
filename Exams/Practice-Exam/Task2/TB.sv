@@ -13,7 +13,7 @@ module TB_updown_counter (
 
 );
 
-task check_output(logic expected);
+task check_output(logic [7:0] expected);
     if ( count !== expected )begin
         $display("TEST FAILED: \n time = %0d, clk = %0d, rst_n=%d, enable = %d, counting mode = %d, load =%d,  data_in =%d, count value =%0d , expected=%d",
                  $time, clk, rst_n, en, m, load, data_in, count, expected );
@@ -44,20 +44,24 @@ initial begin
 
     //load signal is low, enable signal (en) is high. 
     // counter increments (m) mode bit is low .
-    @(negedge clk); 
+    //@(negedge clk); 
     rst_n = 1; en = 1; m = 0 ; load = 0 ; //data_in = 5; 
     @(negedge clk); check_output(6);
 
     //load signal is low, enable signal (en) is high. 
     // counter decrements (m) mode bit is high .
-    @(negedge clk); 
+    //@(negedge clk); 
     rst_n = 1; en = 1; m = 1; load = 0 ; //data_in = 5;
-    @(negedge clk); check_output(4);
+    @(negedge clk); check_output(5);
 
     //Active low rst_n signals will reset the count value asynchronously
-    @(negedge clk); 
+    //@(negedge clk); 
     rst_n = 0; en = 1; m = 1; load = 1; data_in = 5 ;
     @(negedge clk); check_output(0);
+
+    //@(negedge clk); 
+    rst_n = 1; en = 0; m = 0; load = 1; data_in = $random %256 ;
+    @(negedge clk); check_output(data_in);
 
     // //
     // @(negedge clk); 
