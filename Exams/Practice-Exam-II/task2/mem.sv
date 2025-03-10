@@ -52,7 +52,8 @@ module mem (
           end
         end
         ACK: begin 
-            memory[latched_addr] <= latched_data;
+            if(op == 1)
+              memory[latched_addr] <= latched_data;
             state <= IDLE;
         end
         default: state <= IDLE;
