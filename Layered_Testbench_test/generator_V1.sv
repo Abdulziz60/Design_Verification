@@ -1,6 +1,8 @@
 class generator;
   
-  rand bit [3:0] a, b; ////////////rand or randc 
+  rand bit [3:0] a, b; //rand or randc 
+
+  
   bit [3:0] y;
 
 endclass
@@ -19,6 +21,5 @@ module tb;
     end
     
   end
-  
   
 endmodule
