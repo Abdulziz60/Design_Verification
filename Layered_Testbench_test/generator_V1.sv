@@ -2,19 +2,13 @@ class generator;
   
   rand bit [3:0] a, b; ////////////rand or randc 
   bit [3:0] y;
-  
-  
 
-
-  
-    
 endclass
 
 module tb;
   generator g;
   int i = 0;
   int status = 0;
-  
   initial begin
     g = new();
     
