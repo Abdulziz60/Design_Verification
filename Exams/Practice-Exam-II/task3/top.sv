@@ -43,16 +43,14 @@ always begin
     sclk = 0;
     @(cs); 
   end
-
-
 end
 
 
 
-initial begin
 
+initial begin
+    #50000;
     $display("Out of the time !!!");
-    #500;
     $finish;
  end
 
