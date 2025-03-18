@@ -1,9 +1,8 @@
-class driver;
+class monitor;
     
    
     transaction trans;
     virtual adder_if vif;
-    
     mailbox #(transaction) mbx;
 
     function new (virtual adder_if vif, mailbox #(transaction)mbx);
@@ -16,12 +15,16 @@ class driver;
     task run();
 
         forever begin
-            mbx.get(trans);
-
-            vif.a = trans.a;
-            vif.b = trans.b;
+            @(vif.a, vif.b, vif.c);
+            trans.a = vif.a;
+            trans.b = vif.b;
+            trans.c = vif.c;
+            
+            $display("[ MON : ]");
+            trans.display();
+            mbx.put(trans);
         end
 
     endtask
 
-endclass //driver 
+endclass //monitor 

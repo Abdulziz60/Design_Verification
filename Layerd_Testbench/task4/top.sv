@@ -1,9 +1,9 @@
-`include "../adder.sv"
-`include "../transaction.sv"
-`include "../adder_if.sv"
-`include "../driver.sv"
-`include "../generator.sv"
-`include "../scoreboard.sv"
+`include "../task4/adder.sv"
+`include "../task4/transaction.sv"
+`include "../task4/adder_if.sv"
+`include "../task4/driver.sv"
+`include "../task4/generator.sv"
+`include "../task4/scoreboard.sv"
 
 module  top ; 
 
