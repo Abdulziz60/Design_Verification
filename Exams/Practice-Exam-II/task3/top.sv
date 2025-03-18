@@ -12,13 +12,19 @@ module top;
     logic mosi;    // Master Out, Slave In
     logic miso;    // Master In, Slave Out
 
+    logic clk;
+
 spi_slave_mem ( .* );
 TB_spi_slave_mem ( .* );
 
 
 
 
-initial sclk = 0;
+initial begin
+    clk = 0;
+    forever #5 clk = ~clk; // Toggle clock every 5 time units
+end
+
 // always @( cs ) begin
 //   if ( cs === 0 ) begin 
 //     for(int i = 0 ; i <= 32; i++)begin
@@ -49,7 +55,7 @@ end
 
 
 initial begin
-    #50000;
+    #5000;
     $display("Out of the time !!!");
     $finish;
  end

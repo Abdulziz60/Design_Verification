@@ -1,0 +1,134 @@
+module TB_spi_slave_mem (
+    output logic cs,      // Active–low chip select
+    input  logic sclk,    // Serial clock
+    output logic mosi,    // Master In, Slave Out
+    input  logic miso     // Master Out, Slave In
+);
+
+logic [7:0] received_data;
+logic [7:0] instruction;
+logic [7:0] data_input;
+logic [7:0] data_stream [0:15];
+
+
+
+// **1️⃣ Write on Negative Edge**
+task write_data(input logic [7:0] instruction, input logic [7:0] data_in);
+    cs <= 0;
+    @(negedge sclk);
+    for (int i = 7; i >= 0; i--) begin
+        mosi <= instruction[i];
+        @(negedge sclk);
+    end
+    for (int i = 7; i >= 0; i--) begin
+        mosi <= data_in[i];
+        @(negedge sclk);
+    end
+    $display("✅ Write: Address = %0h, Data = %0h, Time = %0t", instruction[4:0], data_in, $time);
+    #3; cs <= 1; #10;
+endtask
+
+// **2️⃣ Read on Positive Edge**
+task read_data(input logic [7:0] instruction, output logic [7:0] data_out);
+    cs <= 0;
+    @(posedge sclk);
+    for (int i = 7; i >= 0; i--) begin
+        mosi <= instruction[i];
+        @(posedge sclk);
+    end
+    for (int i = 7; i >= 0; i--) begin
+        @(posedge sclk);
+        data_out[i] = miso;
+    end
+    $display("✅ Read: Address = %0h, Data = %0h, Time = %0t", instruction[4:0], data_out, $time);
+    #3; cs <= 1; #10;
+endtask
+
+// **3️⃣ Burst Write on Negative Edge**
+task burst_write(input logic [7:0] instruction, input logic [7:0] data_array [0:15]);
+    cs <= 0;
+    @(negedge sclk);
+    for (int i = 7; i >= 0; i--) begin
+        mosi <= instruction[i];
+        @(negedge sclk);
+    end
+    for (int j = 0; j < 16; j++) begin
+        if (cs == 1 || instruction[4:0] > 8'h1F) break;
+        for (int i = 7; i >= 0; i--) begin
+            mosi <= data_array[j][i];
+            @(negedge sclk);
+        end
+        $display("✅ Burst Write: Address = %0h, Data = %0h, Time = %0t", instruction[4:0], data_array[j], $time);
+        instruction[4:0] = instruction[4:0] + 1;
+    end
+    #3; cs <= 1; #10;
+endtask
+
+// **4️⃣ Burst Read on Positive Edge**
+task burst_read(input logic [7:0] instruction, output logic [7:0] data_out);
+    cs <= 0;
+    @(posedge sclk);
+    for (int i = 7; i >= 0; i--) begin
+        mosi <= instruction[i];
+        @(posedge sclk);
+    end
+    for (int j = 0; j < 16; j++) begin
+        if (cs == 1 || instruction[4:0] > 8'h1F) break;
+        for (int i = 7; i >= 0; i--) begin
+            @(posedge sclk);
+            data_out[i] = miso;
+        end
+        $display("✅ Burst Read: Address = %0h, Data = %0h, Time = %0t", instruction[4:0], data_out, $time);
+        instruction[4:0] = instruction[4:0] + 1;
+    end
+    #3; cs <= 1; #10;
+endtask
+
+// **🔄 Sequentially Execute Instructions**
+initial begin
+    #5;
+    $display("🟢 Starting SPI Transactions");
+
+    // **Initialize Data Stream Before Writing**
+    data_stream[0]  = 8'hA1; data_stream[1]  = 8'hB2;
+    data_stream[2]  = 8'hC3; data_stream[3]  = 8'hD4;
+    data_stream[4]  = 8'hE5; data_stream[5]  = 8'hF6;
+    data_stream[6]  = 8'h12; data_stream[7]  = 8'h34;
+    data_stream[8]  = 8'h56; data_stream[9]  = 8'h78;
+    data_stream[10] = 8'h9A; data_stream[11] = 8'hBC;
+    data_stream[12] = 8'hDE; data_stream[13] = 8'hF0;
+    data_stream[14] = 8'hAB; data_stream[15] = 8'hCD;
+
+    // **Write**
+    instruction = 8'b00100001; 
+    data_input = 8'b00000001; 
+    write_data(instruction, data_input);
+    #50;
+
+    // **Read**
+    instruction = 8'b01000001;
+    read_data(instruction, received_data);
+    #50;
+
+    // **Burst Write**
+    instruction = 8'b01100000;
+    burst_write(instruction, data_stream);
+    #50;
+
+    // **Burst Read**
+    instruction = 8'b10000000;
+    burst_read(instruction, received_data);
+    #50;
+
+    $display("🟢 SPI Transactions Completed");
+    #1000; 
+    $finish;
+end
+
+// **Dump File**
+initial begin
+    $dumpfile("dump.vcd");
+    $dumpvars;
+end
+
+endmodule

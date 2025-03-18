@@ -2,6 +2,7 @@
 
 module TB_spi_slave_mem (
 
+    input   logic clk, 
     output  logic cs,      // Active–low chip select
     input   logic sclk,    // Serial clock
     output  logic mosi,    // Master In, Slave Out
@@ -10,53 +11,64 @@ module TB_spi_slave_mem (
 
 logic [7:0] received_data;
 
+initial begin
+cs = 1;
+mosi = 0;
+
+end
 
 // 1. Single Write : Write a value via SPI, read it back
 task write_data (input logic [7:0] write_add, input logic [7:0] data_in);
-   cs <= 0;
-   @(posedge sclk);
+    @(negedge clk);
+    cs <= 0;
+    @(posedge sclk);
     for(int i = 7; i >= 5; i-- ) begin //inst
-        mosi <= write_add [i];
-        @(posedge sclk);
+        mosi <= write_add[i];
+        @(negedge sclk);
         $display("inst mosi = %0b , time: %0t", mosi, $time);
     end
-    for(int i = 4 ; i >= 0; i--) begin // address
-        mosi <= write_add [i];
-        @(posedge sclk);
+    for(int i = 4; i >= 0; i--) begin // address
+        mosi <= write_add[i];
+        @(negedge sclk);
         $display("addr mosi = %0b , time: %0t", mosi, $time);
     end
     for (int i = 7; i >= 0; i--) begin //data 
-        mosi <= data_in [i];
-        @(posedge sclk);
+        mosi <= data_in[i];
+        @(negedge sclk);
         $display("data mosi = %0b , time: %0t", mosi, $time);
     end
-    $display (" inst_add = %0b, \n data = %0b,", write_add , data_in);
-    #3;
+    $display("✅ Write: Address = %0b, Data = %0b, Time = %0t", write_add[4:0], data_in, $time);
+
+    $display("------------ Write Data Done ---------------");
+    @(posedge clk);
     cs <= 1;
     #10;
 endtask
 
 //1. Single read : read the data back.
-task read_data (input logic [7:0] read_add, output logic data_out);
+task read_data (input logic [7:0] read_add, output logic [7:0] data_out);
+    @(posedge clk);
     cs <= 0;
     @(posedge sclk);
     for(int i = 7; i >= 5; i-- ) begin //inst
-        mosi <= read_add [i];
+        mosi <= read_add[i];
         @(posedge sclk);
         $display("inst mosi = %0b , time: %0t", mosi, $time);
     end
-    for(int i = 4 ; i >= 0; i--) begin // address
-        mosi <= read_add [i];
+    for(int i = 4; i >= 0; i--) begin // address
+        mosi <= read_add[i];
         @(posedge sclk);
         $display("addr mosi = %0b , time: %0t", mosi, $time);
     end
     for (int i = 7; i >= 0; i--) begin
-        @(negedge sclk);  
-        data_out[i] = miso; 
+        @(posedge sclk);  
+        data_out[i] = miso; // Read from SPI slave
         $display("data miso = %0b , time: %0t", miso, $time);
     end
-    $display (" read_add = %0b, \n data out = %0b,", read_add , miso);
-    #3;
+    $display("✅ Read: Address = %0b, Data = %0b, Time = %0t", read_add[4:0], data_out, $time);
+    
+    $display("------------ Read Data Done ---------------");
+    @(posedge clk);
     cs <= 1;
     #10;
 endtask
@@ -64,6 +76,7 @@ endtask
 
 //2	Burst Write: Write multiple values.
 task burst_write(input logic [7:0] start_addr, input logic [7:0] data_array [0:15]);
+    @(negedge clk);
     cs <= 0;  // Activate SPI
     @(posedge sclk);
 
@@ -90,7 +103,8 @@ task burst_write(input logic [7:0] start_addr, input logic [7:0] data_array [0:1
         $display("Burst Write: Address = %0b, Data = %0b, Time = %0t", start_addr + j, data_array[j], $time);
     end
 
-    #3;
+    @(negedge clk);
+    $display("Burst Write is done ...");
     cs <= 1; // Deactivate SPI
     #10;
 endtask
@@ -138,9 +152,12 @@ endtask
    
 
 initial begin
-    burst_write(8'h10, data_stream);
-    // write_data( 8'b00100001, 8'b00000001);
-    // read_data(8'b01000001,received_data);
+    // burst_write(8'h10, data_stream);
+    write_data( 8'b00100001, 8'b00000001);
+    #50;
+    read_data(8'b01000001,received_data);
+
+   
 end
  
  initial begin
