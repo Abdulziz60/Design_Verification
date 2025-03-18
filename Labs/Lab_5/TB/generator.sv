@@ -1,45 +1,45 @@
+`timescale 1ns/1ps
+
 //1: Generator class responsible for creating and sending transactions
-class Generator
+class Generator;
     
     // Random transaction object
-    rand transaction T;
+    transaction trans;
 
     // Event to signal the completion of transaction generation
     event done;
 
     // Mailbox to store and send transactions to Driver
-    mailbox #(transaction) mbx_drv;
+    mailbox #(transaction)mbx;
 
     // Number of transactions to generate
     int repeat_count;
 
 
     //2 Constructor: Initializes the mailbox and creates a transaction object
-    function new(mailbox #(transaction) mbx_drv, int repeat_count = 10);
-        this.mbx_drv = mbx_drv;
+    function new(mailbox #(transaction) mbx, int repeat_count = 10);
+        this.mbx = mbx;
         this.repeat_count = repeat_count;
-        T = new();
+        trans = new();
     endfunction
 
     //3 run task
     task run();
-        for (int i = 0; i<repeat_count ;i++) 
+        // for (int i = 0; i<repeat_count ;i++) 
+        repeat(repeat_count)
             begin
-                if (!T.randomize())  // Attempt to randomize the transaction
-                $display("Randomization Failed at %0d", i);
+                if (!trans.randomize())  // Attempt to randomize the transaction
+                $display("Randomization Failed at %0d",repeat_count );
             
-
-            else 
-            begin
-                mbx_drv.put(T.copy());
-                $display("Generator Transaction %0d:", i);
-                T.display();
-                mbx_drv.put(T);  // Send the transaction to the mailbox
+                mbx.put(trans.copy());
+                $display("Generator Transaction %0d.", repeat_count );
+                trans.display();
+                mbx.put(trans);  // Send the transaction to the mailbox
                 #1;  // Small delay
             end
-            end
-        ->done // Trigger the event to signal completion
+            
+        ->done; // Trigger the event to signal completion
 
-    endtask //run
+    endtask 
 
 endclass // Generator

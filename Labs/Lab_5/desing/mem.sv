@@ -1,11 +1,11 @@
 
 module mem (
-    input        clk,
-	input        we, 
+  input              clk,
+	input              we, 
 	input  logic [4:0] addr  ,
 	input  logic [7:0] din  ,
-    output logic [7:0] dout
-	   );
+  output logic [7:0] dout
+);
 // SYSTEMVERILOG: timeunit and timeprecision specification
 timeunit 1ns;
 timeprecision 1ns;
