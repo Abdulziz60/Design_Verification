@@ -1,7 +1,11 @@
+// Include directories
+// Add the source directory for SystemVerilog files
+-incdir ../sv
 
-// include directories
-//*** add incdir include directories here
-
-// compile files
-//*** add compile files here
+// Compile files
+// Compile the YAPP package (includes yapp_packet.sv)
+../sv/yapp_packet.sv 
+../sv/yapp_pkg.sv 
+// Compile the top-level test module
+top.sv            
 
