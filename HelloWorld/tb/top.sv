@@ -1,6 +1,7 @@
-// import  uvm_pkg::*;
+`include "uvm_macros.svh"
+import  uvm_pkg::*;
 
-// `include "uvm_macros.svh"
+
 
 `include "../sv/dut_if.sv"
 `include "../rtl/dut.sv"
