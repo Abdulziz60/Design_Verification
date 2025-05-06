@@ -34,7 +34,9 @@ class i2c_test extends uvm_test;
   `uvm_component_utils(i2c_test)
 
   i2c_env env;
-  i2c_test_plan_seq plan_seq;
+  // i2c_test_plan_seq plan_seq;
+  // i2c_write_seq write_seq;
+  i2c_directed_seq dir_seq;
 
   function new(string name, uvm_component parent);
     super.new(name, parent);
@@ -47,15 +49,28 @@ class i2c_test extends uvm_test;
 
   task run_phase(uvm_phase phase);
     super.run_phase(phase);
+    
     phase.raise_objection(this);
-
-    `uvm_info(get_type_name(), "Starting i2c_test_plan_seq", UVM_LOW)
-    plan_seq = i2c_test_plan_seq::type_id::create("plan_seq");
-    plan_seq.random_txn_count = 10;
-    plan_seq.start(env.master_agent.sequencer);
-
-    `uvm_info(get_type_name(), "i2c_test_plan_seq Completed", UVM_LOW)
+    `uvm_info(get_type_name(), "Starting i2c_directed_seq", UVM_LOW)
+    dir_seq = i2c_directed_seq::type_id::create("dir_seq");
+    dir_seq.start(env.master_agent.sequencer);
+    `uvm_info(get_type_name(), "i2c_directed_seq Completed", UVM_LOW)
     phase.drop_objection(this);
+
+    // phase.raise_objection(this);
+    // `uvm_info(get_type_name(), "Starting i2c_write_seq", UVM_LOW)
+    // write_seq = i2c_write_seq::type_id::create("write_seq");
+    // write_seq.start(env.master_agent.sequencer);
+    // `uvm_info(get_type_name(), "i2c_write_seq Completed", UVM_LOW)
+    // phase.drop_objection(this);
+
+    // phase.raise_objection(this);
+    // `uvm_info(get_type_name(), "Starting i2c_test_plan_seq", UVM_LOW)
+    // plan_seq = i2c_test_plan_seq::type_id::create("plan_seq");
+    // plan_seq.random_txn_count = 10;
+    // plan_seq.start(env.master_agent.sequencer);
+    // `uvm_info(get_type_name(), "i2c_test_plan_seq Completed", UVM_LOW)
+    // phase.drop_objection(this);
   endtask
 endclass
 
