@@ -3,23 +3,7 @@ module tb_top;
   logic clk;
   logic rst_n;
 
-  wb_if wbif(clk);
-
-  i2c_dut_dummy dut (
-    .clk   (clk),
-    .rst_n (rst_n),
-    .cyc   (wbif.cyc),
-    .stb   (wbif.stb),
-    .we    (wbif.we),
-    .addr  (wbif.addr[2:0]), 
-    .dat_i (wbif.wdata),
-    .dat_o (wbif.rdata),
-    .ack   (wbif.ack),
-    .sda_i (1'b1),      
-    .sda_o (),
-    .scl_o (),
-    .sda_o_en ()
-  );
+  i2c_if i2c(clk);
 
   // Clock generation
   initial begin
@@ -30,18 +14,36 @@ module tb_top;
   // Reset generation
   initial begin
     rst_n = 0;
-    #20;
+    repeat (2) @(posedge clk);
     rst_n = 1;
   end
 
-  initial begin
-    uvm_config_db#(virtual wb_if)::set(null, "uvm_test_top.env.master_agent.driver", "vif", wbif);
-    uvm_config_db#(virtual wb_if)::set(null, "uvm_test_top.env.master_agent.monitor", "vif", wbif);
+  assign i2c.rst_n = rst_n;
 
+  initial begin
+    
+
+    // Set virtual interface in Config DB before run_test
+    uvm_config_db#(virtual i2c_if)::set(null, "uvm_test_top.env.master_agent", "vif", i2c);
+    uvm_config_db#(virtual i2c_if)::set(null, "uvm_test_top.env.master_agent.driver", "vif", i2c);
+    uvm_config_db#(virtual i2c_if)::set(null, "uvm_test_top.env.master_agent.monitor", "vif", i2c);
+
+    uvm_config_db#(virtual i2c_if)::set(null, "uvm_test_top.env.slave_agent", "vif", i2c);
+    uvm_config_db#(virtual i2c_if)::set(null, "uvm_test_top.env.slave_agent.driver", "vif", i2c);
+    uvm_config_db#(virtual i2c_if)::set(null, "uvm_test_top.env.slave_agent.monitor", "vif", i2c);
+
+    $display("==== Starting I2C UVM Simulation ====");
     run_test("i2c_test");
   end
 
+  initial begin
+    $dumpfile("i2c_waveform.vcd");
+    $dumpvars(0, tb_top);
+  end
+
+  initial begin
+    #5000;
+    $finish;
+  end
+
 endmodule
-
-
-// `endif
