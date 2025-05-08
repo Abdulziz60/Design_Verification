@@ -1,0 +1,171 @@
+$date
+	Thu May  8 21:56:05 2025
+$end
+
+$version
+	Synopsys VCS version W-2024.09-SP1_Full64
+$end
+
+$timescale
+	1ps
+$end
+
+$comment Csum: 1 d1232962c24d52a8 $end
+
+
+$scope module uvm_pkg $end
+$var time 64 ! setting_offset $end
+$var reg 32 " uvm_global_random_seed [31:0] $end
+$var reg 32 # UVM_UNBOUNDED_CONNECTIONS [31:0] $end
+$var reg 1 $ uvm_start_uvm_declarations $end
+$var reg 32 % setting_verbosity [31:0] $end
+$var reg 1 & is_verdi_set_verbosity_called $end
+$var reg 1 ' is_uvm_factory_trace_checked $end
+$var reg 1 ( is_verdi_trace_fac $end
+$upscope $end
+
+
+$scope module $unit $end
+$upscope $end
+
+
+$scope module _vcs_msglog $end
+$var reg 32 ) _MSG_T [31:0] $end
+$var reg 32 * _MSG_S [31:0] $end
+$var reg 32 + _MSG_R [31:0] $end
+$upscope $end
+
+
+$scope module uvm_custom_install_recording $end
+$var reg 32 , file_handle [31:0] $end
+$var reg 32 - is_sanity_exist [31:0] $end
+
+$scope begin unnamed$$_0 $end
+$var reg 32 . verdi_tracing [31:0] $end
+
+$scope begin unnamed$$_1 $end
+$upscope $end
+
+
+$scope begin unnamed$$_2 $end
+$upscope $end
+
+$upscope $end
+
+$upscope $end
+
+
+$scope module top $end
+$var reg 1 / clk $end
+
+$scope begin unnamed$$_vcs_3 $end
+$upscope $end
+
+
+$scope begin unnamed$$_vcs_0 $end
+$upscope $end
+
+
+$scope begin unnamed$$_vcs_1 $end
+$upscope $end
+
+
+$scope begin unnamed$$_vcs_2 $end
+$upscope $end
+
+
+$scope begin unnamed$$_vcs_4 $end
+$upscope $end
+
+
+$scope module vif $end
+$var reg 1 0 clk $end
+$var wire 1 1 sda $end
+$var wire 1 2 scl $end
+$upscope $end
+
+$upscope $end
+
+$enddefinitions $end
+
+#0
+$dumpvars
+1'
+0&
+0(
+1$
+bxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx !
+b11111111111111111111111111111111 #
+b00000000000000000000000000000000 %
+b01000010000001111100110001000111 "
+b00000000000000000000000000000000 +
+b00000000000000000000000000000000 *
+b00000000000000000000000000000000 )
+b00000000000000000000000000000000 ,
+b00000000000000000000000000000000 -
+b00000000000000000000000000000000 .
+1/
+z2
+z1
+10
+$end
+#5000
+0/
+00
+#10000
+1/
+10
+#15000
+0/
+00
+#20000
+1/
+10
+#25000
+0/
+00
+#30000
+1/
+10
+#35000
+0/
+00
+#40000
+1/
+10
+#45000
+0/
+00
+#50000
+1/
+10
+#55000
+0/
+00
+#60000
+1/
+10
+#65000
+0/
+00
+#70000
+1/
+10
+#75000
+0/
+00
+#80000
+1/
+10
+#85000
+0/
+00
+#90000
+1/
+10
+#95000
+0/
+00
+#100000
+1/
+10
