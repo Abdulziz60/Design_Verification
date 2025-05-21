@@ -1,4 +1,4 @@
-import uvm_pkg::*;
+// import uvm_pkg::*;
 // `include "uvm.macros.svh"
 
 module top; 
@@ -6,7 +6,9 @@ module top;
     logic clk;
 
     i2c_if vif(.clk(clk));
-
+ 
+    // pullup p1(vif.sda);
+    
     initial begin
         clk = 0;
         forever begin
@@ -24,12 +26,14 @@ module top;
     end
 
     initial begin
-    $dumpfile("i2c_waveform.vcd");
-    $dumpvars( );
-    end     
+      $dumpfile("i2c_waveform.vcd");
+      $dumpvars(0, top);
+    //   $dumpvars(1, top.vif);
+    end
+     
 
     initial begin
-        #50000;
+        #5000;
         $finish;
     end
 

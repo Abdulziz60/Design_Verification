@@ -32,7 +32,7 @@ class master_agent extends uvm_agent;
     function void connect_phase(uvm_phase phase);
       super.connect_phase(phase);
       `uvm_info("master_agent CLASS", "Connect Phase!", UVM_HIGH)
-
+      m_driver.seq_item_port.connect(m_sequencer.seq_item_export);
     endfunction
 
     //--------------------------------------------------------

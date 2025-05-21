@@ -5,6 +5,8 @@ class i2c_test extends uvm_test;
   i2c_tb tb;
   i2c_sequence_item i2c_seq_item;
   i2c_sequence i2c_seq; 
+  i2c_test_read_write rw_seq;
+
   virtual i2c_if vif;
 
   //--------------------------------------------------------
@@ -26,11 +28,13 @@ class i2c_test extends uvm_test;
     tb = i2c_tb::type_id::create("tb", this);
     i2c_seq_item = i2c_sequence_item::type_id::create("i2c_seq_item", this);
     i2c_seq = i2c_sequence::type_id::create("i2c_sequence", this );
+    
+
 
     
-        if (!uvm_config_db#(virtual i2c_if)::get(this, "", "vif", vif))
-          `uvm_fatal("NOVIF", "virtual interface not set for vif")
-        uvm_config_db#(virtual i2c_if)::set(this, "env.*", "vif", vif);
+        // if (!uvm_config_db#(virtual i2c_if)::get(this, "", "vif", vif))
+        //   `uvm_fatal("NOVIF", "virtual interface not set for vif")
+        // uvm_config_db#(virtual i2c_if)::set(this, "env.*", "vif", vif);
   endfunction
 
   
@@ -56,7 +60,8 @@ class i2c_test extends uvm_test;
 
     phase.raise_objection(this);
 
-    i2c_seq.start(tb.env.MA.m_sequencer);
+    rw_seq = i2c_test_read_write::type_id::create("rw_seq");
+    rw_seq.start(tb.env.MA.m_sequencer);
 
     #100;
     phase.drop_objection(this);

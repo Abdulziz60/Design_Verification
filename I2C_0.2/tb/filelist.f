@@ -6,6 +6,7 @@
 
 // Sequence item
 ../sv/i2c_sequence_item.sv
+../sv/i2c_write_seq.sv
 
 // Sequences
 ../sv/i2c_sequence.sv
